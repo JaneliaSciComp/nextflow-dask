@@ -1,0 +1,9 @@
+# nextflow work files
+.nextflow
+.nextflow.*
+work
+# backup files
+*~
+*.bak
+*.swp
+#*#
