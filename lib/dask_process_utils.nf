@@ -38,3 +38,22 @@ def lookup_ip_inside_docker_script() {
     fi
     """
 }
+
+def wait_for_file_script(interval, timeout) {
+    """
+    function wait_for_file() {
+        local f=\$1
+        echo "Check for \${f}"
+        local -i seconds=0
+
+        while ! [[ -e \${f} ]] ; do
+            if (( ${timeout} > 0 && \${seconds} > ${timeout} )); then
+                echo "Timed out after \${seconds} seconds while waiting for \${f}"
+                exit 2
+            fi
+            sleep ${interval}
+            seconds=\$(( \$seconds + ${interval} ))
+        done
+    }
+    """
+}
