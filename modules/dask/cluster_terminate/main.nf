@@ -1,5 +1,5 @@
-process DASK_TERMINATE {
-    container = params.container
+process DASK_CLUSTER_TERMINATE {
+    container { params.container }
 
     input:
     val(work_dir)
@@ -10,7 +10,7 @@ process DASK_TERMINATE {
     script:
     def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
     """
-    echo "$(date): Terminate DASK Scheduler"
+    echo "\$(date): Terminate DASK Scheduler: ${work_dir}"
     cat > ${terminate_file_name} <<EOF
     DONE
     EOF

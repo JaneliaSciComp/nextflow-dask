@@ -1,3 +1,7 @@
+def dask_scheduler_info() {
+    'scheduler-info.json'
+}
+
 def lookup_ip_script() {
     if (workflow.containerEngine == "docker") {
         return lookup_ip_inside_docker_script()
@@ -43,11 +47,12 @@ def wait_for_file_script(interval, timeout) {
     """
     function wait_for_file() {
         local f=\$1
-        echo "Check for \${f}"
+        local -i wait_timeout=\${2:-${timeout}}
         local -i seconds=0
 
+        echo "Check for \${f}"
         while ! [[ -e \${f} ]] ; do
-            if (( ${timeout} > 0 && \${seconds} > ${timeout} )); then
+            if (( \${wait_timeout} > 0 && \${seconds} > ${timeout} )); then
                 echo "Timed out after \${seconds} seconds while waiting for \${f}"
                 exit 2
             fi

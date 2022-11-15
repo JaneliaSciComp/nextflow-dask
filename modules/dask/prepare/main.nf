@@ -3,13 +3,12 @@ process DASK_PREPARE {
     label 'process_low'
 
     input:
-    val(work_dirname)
+    val(work_dir)
 
     output:
     val(cluster_work_dir)
 
     script:
-    def work_dir = file(work_dirname)
     cluster_work_dir = "${work_dir}/${workflow.sessionId}"
     log.info "Cluster working dir: ${cluster_work_dir}"
     """

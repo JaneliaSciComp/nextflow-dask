@@ -7,3 +7,5 @@ work
 *.bak
 *.swp
 #*#
+# local files
+local

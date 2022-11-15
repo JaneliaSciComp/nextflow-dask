@@ -1,4 +1,5 @@
 include {
+    dask_scheduler_info;
     lookup_ip_script;
     wait_for_file_script;
 } from '../../../lib/dask_process_utils';
@@ -9,10 +10,10 @@ process DASK_SCHEDULER {
     memory "${params.scheduler_cores * params.scheduler_mem_gb_per_core} GB"
 
     input:
-    val(work_dirname) // work_dirname must be unique for the cluster
+    val(work_dir) // work_dir must be unique for the cluster
 
     output:
-    tuple val(work_dirname), val(scheduler_file)
+    val(work_dir)
 
     script:
     def with_dashboard = params.with_dashboard 
@@ -25,9 +26,8 @@ process DASK_SCHEDULER {
                             ? "--dashboard-address ${params.dashboard_port}"
                             : ""
     def lookup_ip = lookup_ip_script()
-    def work_dir = file(work_dirname)
     def scheduler_pid_file ="${work_dir}/scheduler.pid"
-    scheduler_file ="${work_dir}/scheduler.conn"
+    def scheduler_file ="${work_dir}/${dask_scheduler_info()}"
     def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
     """
     # do not timeout
