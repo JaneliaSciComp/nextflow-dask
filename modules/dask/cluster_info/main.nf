@@ -1,6 +1,5 @@
 include {
     dask_scheduler_info;
-    lookup_ip_script;
     wait_for_file_script;
 } from '../../../lib/dask_process_utils';
 

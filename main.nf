@@ -21,8 +21,8 @@ workflow {
 
     res | view
 
-    res 
-    | map { it[0]}
+    res
+    | map { it.work_dir }
     | DASK_CLUSTER_TERMINATE
 
 }

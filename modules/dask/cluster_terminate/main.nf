@@ -1,5 +1,6 @@
 process DASK_CLUSTER_TERMINATE {
     container { params.container }
+    label 'process_low'
 
     input:
     val(work_dir)

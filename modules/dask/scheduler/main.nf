@@ -6,6 +6,7 @@ include {
 
 process DASK_SCHEDULER {
     container { params.container }
+    containerOptions { get_container_options() }
     cpus { params.scheduler_cores }
     memory "${params.scheduler_cores * params.scheduler_mem_gb_per_core} GB"
 
@@ -46,4 +47,16 @@ process DASK_SCHEDULER {
 
     wait_for_file "${terminate_file_name}"
     """
+}
+
+def get_container_options() {
+    if (workflow.containerEngine == 'docker') {
+        if (params.with_dashboard) {
+            def dashboard_port = params.dashboard_port > 0
+                                    ? params.dashboard_port
+                                    : 8787
+            return "-p ${dashboard_port}:${dashboard_port}"
+        }
+    }
+    return ''
 }

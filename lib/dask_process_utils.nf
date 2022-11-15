@@ -62,3 +62,8 @@ def wait_for_file_script(interval, timeout) {
     }
     """
 }
+
+def json_text_to_data(text) {
+    def jsonSlurper = new groovy.json.JsonSlurper()
+    jsonSlurper.parseText(text)
+}

@@ -7,6 +7,8 @@ process DASK_WORKER {
     container params.container
     cpus { params.worker_cores }
     memory "${params.worker_cores * params.worker_mem_gb_per_core} GB"
+    tag "worker-${worker_id}"
+    clusterOptions { params.worker_cluster_opts }
 
     input:
     tuple val(work_dir), val(worker_id)
@@ -20,6 +22,10 @@ process DASK_WORKER {
     def worker_mem = "${params.worker_cores * params.worker_mem_gb_per_core}GB"
     def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
     def worker_work_dir = "${work_dir}/${worker_name}"
+    def threads_per_worker_arg = params.worker_threads > 0 
+                                    ? "--nthreads ${params.worker_threads}"
+                                    : ""
+
     """
     ${wait_for_file_script(params.file_check_interval_in_seconds, params.scheduler_start_timeout)}
 
@@ -36,6 +42,7 @@ process DASK_WORKER {
         --memory-limit ${worker_mem} \
         --pid-file "${worker_work_dir}/${worker_name}.pid" \
         --local-directory ${worker_work_dir} \
+        ${threads_per_worker_arg} \
         \${scheduler_ip} &
     # And wait for the termination marker
     wait_for_file "${terminate_file_name}" -1
