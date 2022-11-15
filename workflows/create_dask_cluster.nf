@@ -1,25 +1,25 @@
 include {
     DASK_PREPARE;
-} from '../../modules/dask/prepare/main'
+} from '../modules/dask/prepare/main'
 
 include {
     DASK_SCHEDULER;
-} from '../../modules/dask/scheduler/main'
+} from '../modules/dask/scheduler/main'
 
 include {
     DASK_WORKER;
-} from '../../modules/dask/worker/main'
+} from '../modules/dask/worker/main'
 
 include {
     DASK_CLUSTER_INFO;
-} from '../../modules/dask/cluster_info/main'
+} from '../modules/dask/cluster_info/main'
 
 workflow CREATE_DASK_CLUSTER {
     take:
-    work_dir
+    base_work_dir
 
     main:
-    def cluster_work_dir = DASK_PREPARE(work_dir)
+    def cluster_work_dir = DASK_PREPARE(base_work_dir)
     // start dask scheduler
     def scheduler_res = DASK_SCHEDULER(cluster_work_dir);
     // start dask workers

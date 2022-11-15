@@ -10,7 +10,7 @@ final_params = default_dask_params() + params
 
 include {
     CREATE_DASK_CLUSTER;
-} from './subworkflows/create_dask_cluster/main' addParams(final_params);
+} from './workflows/create_dask_cluster' addParams(final_params);
 
 include {
     DASK_CLUSTER_TERMINATE;
