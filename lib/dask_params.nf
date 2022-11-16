@@ -9,7 +9,7 @@ def default_dask_params() {
         scheduler_mem_gb_per_core: 1,
         workers: 1,
         worker_cores: 1,
-        worker_threads: 2,
+        worker_threads: 1,
         worker_mem_gb_per_core: 1,
         file_check_interval_in_seconds: 5,
         dask_cluster_start_timeout: 120,

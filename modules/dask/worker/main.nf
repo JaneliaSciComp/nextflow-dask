@@ -8,6 +8,7 @@ process DASK_WORKER {
     cpus { params.worker_cores }
     memory "${params.worker_cores * params.worker_mem_gb_per_core} GB"
     tag "worker-${worker_id}"
+    label 'workerClusterOptions'
 
     input:
     tuple val(work_dir), val(worker_id)
