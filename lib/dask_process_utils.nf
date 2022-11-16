@@ -51,10 +51,14 @@ def wait_for_file_script(interval, timeout) {
         local -i seconds=0
         local -i polling_interval=${interval}
 
-        echo "Check for \${f}"
+        if (( \${wait_timeout} > 0  )); then
+            echo "Check for \${f} with a timeout of \${wait_timeout} seconds"
+        else
+            echo "Check for \${f} with NO timeout"
+        fi
+
         while ! [[ -e \${f} ]] ; do
-            echo "!!!!\$seconds: check \$f"
-            if (( \${wait_timeout} > 0 && \${seconds} > ${timeout} )); then
+            if (( \${wait_timeout} > 0 && \${seconds} > \${wait_timeout} )); then
                 echo "Timed out after \${seconds} seconds while waiting for \${f}"
                 exit 2
             fi

@@ -13,7 +13,7 @@ def default_dask_params() {
         worker_mem_gb_per_core: 1,
         worker_cluster_opts: '', // specific worker cluster options in case a GPU is needed
         file_check_interval_in_seconds: 2,
-        scheduler_start_timeout: 30,
+        dask_cluster_start_timeout: 30,
         terminate_cluster_marker: 'terminate-dask'
     ]
 }

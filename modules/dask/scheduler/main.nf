@@ -45,6 +45,11 @@ process DASK_SCHEDULER {
         --pid-file ${scheduler_pid_file} \
         --scheduler-file ${scheduler_file} &
 
+    # wait for PID file
+    wait_for_file ${scheduler_pid_file} ${params.dask_cluster_start_timeout}
+
+    trap "kill -9 \$(cat ${scheduler_pid_file}) &> /dev/null" EXIT
+
     wait_for_file ${terminate_file_name}
     """
 }
