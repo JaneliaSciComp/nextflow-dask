@@ -45,7 +45,7 @@ process DASK_SCHEDULER {
         --pid-file ${scheduler_pid_file} \
         --scheduler-file ${scheduler_file} &
 
-    wait_for_file "${terminate_file_name}"
+    wait_for_file ${terminate_file_name}
     """
 }
 

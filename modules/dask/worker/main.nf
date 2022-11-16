@@ -45,6 +45,6 @@ process DASK_WORKER {
         ${threads_per_worker_arg} \
         \${scheduler_ip} &
     # And wait for the termination marker
-    wait_for_file "${terminate_file_name}" -1
+    wait_for_file ${terminate_file_name} -1
     """
 }
