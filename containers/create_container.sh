@@ -1,3 +1,3 @@
 docker build \
-    -t registry.int.janelia/janeliascicomp/dask:1.0 \
+    -t registry.int.janelia.org/janeliascicomp/dask:1.0 \
     $*
