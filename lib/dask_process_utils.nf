@@ -49,16 +49,19 @@ def wait_for_file_script(interval, timeout) {
         local f=\$1
         local -i wait_timeout=\${2:-${timeout}}
         local -i seconds=0
+        local -i polling_interval=${interval}
 
         echo "Check for \${f}"
         while ! [[ -e \${f} ]] ; do
+            echo "!!!!\$seconds: check \$f"
             if (( \${wait_timeout} > 0 && \${seconds} > ${timeout} )); then
                 echo "Timed out after \${seconds} seconds while waiting for \${f}"
                 exit 2
             fi
-            sleep ${interval}
-            seconds=\$(( \$seconds + ${interval} ))
+            sleep \$polling_interval
+            seconds=\$(( \$seconds + \$polling_interval ))
         done
+        echo "Found \${f}"
     }
     """
 }
