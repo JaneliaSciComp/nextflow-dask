@@ -1,6 +1,6 @@
 def default_dask_params() {
     [
-        container: 'registry.int.janelia/janeliascicomp/dask:1.0',
+        container: 'registry.int.janelia.org/janeliascicomp/dask:1.0',
         work_dir: '',
         with_dashboard: true,
         port: 0,
