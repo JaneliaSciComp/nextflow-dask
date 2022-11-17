@@ -38,7 +38,7 @@ process DASK_WORKER {
     scheduler_ip=\$(jq -r ".address" "${scheduler_file}")
     echo "Found scheduler IP: \${scheduler_ip}"
     # Start a worker in background
-    dask worker \
+    dask-worker \
         --name ${worker_name} \
         --memory-limit ${worker_mem} \
         --pid-file "${worker_pid_file}" \
