@@ -28,6 +28,13 @@ process DASK_WORKER {
                                     : ""
 
     """
+    if [[ -e ${terminate_file_name} ]] ; then
+        # this can happen if the cluster is created on LSF and the workers cannot get nodes 
+        # before the cluster is ended
+        echo "Do not start worker ${worker_name} because cluster has been terminated already"
+        exit 1
+    fi
+
     ${wait_for_file_script(params.file_check_interval_in_seconds, params.dask_cluster_start_timeout)}
 
     wait_for_file ${scheduler_file}
@@ -45,12 +52,12 @@ process DASK_WORKER {
         --local-directory ${worker_work_dir} \
         ${threads_per_worker_arg} \
         \${scheduler_ip} &
-    # wait for PID file
+    # wait for PID file (the default wait has a timeout so no need for one here)
     wait_for_file ${worker_pid_file}
 
     trap "kill -9 \$(cat ${worker_pid_file}) &> /dev/null" EXIT
 
-    # And wait for the termination marker
+    # And wait for the termination marker (forever)
     wait_for_file ${terminate_file_name} -1
     """
 }

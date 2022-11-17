@@ -31,7 +31,12 @@ process DASK_SCHEDULER {
     def scheduler_file ="${work_dir}/${dask_scheduler_info()}"
     def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
     """
-    # do not timeout
+    if [[ -e ${terminate_file_name} ]] ; then
+        echo "Do not start scheduler because cluster has been terminated already"
+        exit 1
+    fi
+
+    # generate wait script with no timeout as default
     ${wait_for_file_script(params.file_check_interval_in_seconds, -1)}
 
     echo "\$(date): Start DASK Scheduler in ${work_dir}"
@@ -46,6 +51,7 @@ process DASK_SCHEDULER {
         --scheduler-file ${scheduler_file} &
 
     # wait for PID file
+    # make sure there is a timeout param since the default wait does not timeout
     wait_for_file ${scheduler_pid_file} ${params.dask_cluster_start_timeout}
 
     trap "kill -9 \$(cat ${scheduler_pid_file}) &> /dev/null" EXIT
