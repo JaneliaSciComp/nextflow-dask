@@ -17,15 +17,9 @@ RUN wget ${DOWNLOAD_MAMBA_URL} -O mamba-install.sh && \
 
 ENV PATH=/opt/mambaforge/bin:${PATH}
 
-RUN mamba install -y \
-    jq \
-    python-blosc \
-    nomkl \
-    cmake \
-    cytoolz \
-    dask \
-    lz4 \
-    numpy \
-    pandas \
-    cachey \
-    streamz
+COPY conda-requirements.yml /tmp/
+
+RUN mamba update --prefix /opt/mambaforge anaconda && \
+    mamba env update -n base -f /tmp/conda-requirements.yml
+
+RUN rm -rf /opt/mambaforge/pkgs
