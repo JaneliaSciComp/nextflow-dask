@@ -51,7 +51,8 @@ process DASK_WORKER {
         --pid-file "${worker_pid_file}" \
         --local-directory ${worker_work_dir} \
         ${threads_per_worker_arg} \
-        \${scheduler_ip} &
+        \${scheduler_ip} 2> >(tee ${worker_work_dir}/${worker_name}.log >&2) \
+        &
     # wait for PID file (the default wait has a timeout so no need for one here)
     wait_for_file ${worker_pid_file}
 

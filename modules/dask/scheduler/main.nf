@@ -48,7 +48,8 @@ process DASK_SCHEDULER {
         --host \${LOCAL_IP} \
         ${dask_port} \
         --pid-file ${scheduler_pid_file} \
-        --scheduler-file ${scheduler_file} &
+        --scheduler-file ${scheduler_file} 2> >(tee ${work_dir}/scheduler.log >&2) \
+        &
 
     # wait for PID file
     # make sure there is a timeout param since the default wait does not timeout
