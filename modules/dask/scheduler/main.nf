@@ -42,7 +42,7 @@ process DASK_SCHEDULER {
     echo "\$(date): Start DASK Scheduler in ${work_dir}"
     ${lookup_ip}
 
-    dask-scheduler \
+    dask scheduler \
         ${with_dashboard} \
         ${dashboard_port} \
         --host \${LOCAL_IP} \
