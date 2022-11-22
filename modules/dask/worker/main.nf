@@ -50,7 +50,6 @@ process DASK_WORKER {
         --memory-limit ${worker_mem} \
         --pid-file "${worker_pid_file}" \
         --local-directory ${worker_work_dir} \
-        --no-nanny \
         ${threads_per_worker_arg} \
         \${scheduler_ip} &
     # wait for PID file (the default wait has a timeout so no need for one here)
