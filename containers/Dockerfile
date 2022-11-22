@@ -6,6 +6,7 @@ ENV NVIDIA_DRIVER_CAPABILITIES=all
 RUN dnf install -y \
         tar wget \
         hostname \
+        procps-ng \
         net-tools \
         which
 
