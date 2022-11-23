@@ -17,7 +17,7 @@ include {
 } from './modules/dask/cluster_terminate/main' addParams(final_params);
 
 workflow {
-    def res = CREATE_DASK_CLUSTER(file(params.work_dir))
+    def res = CREATE_DASK_CLUSTER(file(params.work_dir), [])
 
     res | view
 

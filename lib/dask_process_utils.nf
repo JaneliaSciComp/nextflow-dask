@@ -74,3 +74,18 @@ def json_text_to_data(text) {
     def jsonSlurper = new groovy.json.JsonSlurper()
     jsonSlurper.parseText(text)
 }
+
+def get_mounted_vols_opts(paths) {
+    def unique_paths = paths.unique(false)
+    switch (workflow.containerEngine) {
+        case 'docker': 
+            return unique_paths.collect { "-v $it:$it" }
+                               .join(' ')
+        case 'singularity':
+            return unique_paths.collect { "-B $it" }
+                               .join(' ')
+        default:
+            log.error "Unsupported container engine: ${workflow.containerEngine}"
+            ''
+    }
+}

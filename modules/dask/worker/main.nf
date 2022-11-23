@@ -1,10 +1,12 @@
 include {
     dask_scheduler_info;
+    get_mounted_vols_opts;
     wait_for_file_script;
 } from '../../../lib/dask_process_utils';
 
 process DASK_WORKER {
     container params.container
+    containerOptions { "${params.runtime_opts} ${get_mounted_vols_opts(worker_bound_dirs)}" }
     cpus { params.worker_cores }
     memory "${params.worker_cores * params.worker_mem_gb_per_core} GB"
     tag "worker-${worker_id}"
@@ -12,6 +14,8 @@ process DASK_WORKER {
 
     input:
     tuple val(work_dir), val(worker_id)
+    val(worker_bound_dirs) // this must be a value channel containing a list of paths 
+                           // that must be made available - it can be an empty list
 
     output:
     val(work_dir)
