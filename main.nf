@@ -6,7 +6,7 @@ include {
     default_dask_params;
 } from './lib/dask_params';
 
-final_params = default_dask_params() + test_params() + params
+final_params = default_dask_params() + with_termination_params() + params
 
 include {
     CREATE_DASK_CLUSTER;
@@ -21,16 +21,18 @@ workflow {
 
     res | view
 
-    if (final_params.test_termination) {
+    if (final_params.with_termination) {
         res
-        | map { it.work_dir }
+        | map {
+            def (cluster_id, scheduler_ip, wd) = it
+            wd
+        }
         | DASK_CLUSTER_TERMINATE
     }
-
 }
 
-def test_params() {
+def with_termination_params() {
     [
-        test_termination: false,
+        with_termination: false,
     ]
 }

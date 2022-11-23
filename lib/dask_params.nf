@@ -11,6 +11,7 @@ def default_dask_params() {
         worker_cores: 1,
         worker_threads: 1,
         worker_mem_gb_per_core: 1,
+        required_workers: 1,
         file_check_interval_in_seconds: 5,
         dask_cluster_start_timeout: 120,
         terminate_cluster_marker: 'terminate-dask'

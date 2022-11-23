@@ -15,6 +15,10 @@ include {
 } from '../modules/dask/cluster_info/main'
 
 include {
+    DASK_CHECK_CLUSTER_WORKERS
+} from '../modules/dask/check_cluster_workers/main'
+
+include {
     json_text_to_data;
 } from '../lib/dask_process_utils'
 
@@ -37,11 +41,12 @@ workflow CREATE_DASK_CLUSTER {
         def (wd, ci) = it
         def ci_json = json_text_to_data(ci)
         [
-            id: ci_json.id,
-            scheduler_address: ci_json.address,
-            work_dir: wd,
+            ci_json.id, // cluster id
+            ci_json.address, // scheduler address
+            wd // cluster work dir
         ]
     }
+    | DASK_CHECK_CLUSTER_WORKERS
 
     emit:
     done = cluster_info
