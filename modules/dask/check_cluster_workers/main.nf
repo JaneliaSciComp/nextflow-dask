@@ -15,8 +15,11 @@ process DASK_CHECK_CLUSTER_WORKERS {
 
     script:
     def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
+    def n_required_workers = params.required_workers > 0
+                                ? params.required_workers
+                                : params.workers
     """
-    required_workers=${params.required_workers}
+    required_workers=${n_required_workers}
     if (( \${required_workers} > 0 )); then
         total_workers=\$((${params.workers}))
         seconds=0
