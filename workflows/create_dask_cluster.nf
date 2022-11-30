@@ -49,6 +49,8 @@ workflow CREATE_DASK_CLUSTER {
     }
     | DASK_CHECK_CLUSTER_WORKERS
 
+    cluster_info | subscribe { log.info "Cluster info: $it" }
+
     emit:
     done = cluster_info
 }

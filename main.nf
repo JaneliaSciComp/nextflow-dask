@@ -19,8 +19,6 @@ include {
 workflow {
     def res = CREATE_DASK_CLUSTER(file(params.work_dir), [])
 
-    res | view
-
     if (final_params.with_termination) {
         res
         | map {
