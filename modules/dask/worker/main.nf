@@ -5,7 +5,7 @@ include {
 } from '../../../lib/dask_process_utils';
 
 process DASK_WORKER {
-    container params.container
+    container params.dask_container
     containerOptions { "${params.runtime_opts} ${get_mounted_vols_opts(worker_paths_bindings)}" }
     cpus { params.worker_cores }
     memory "${params.worker_cores * params.worker_mem_gb_per_core} GB"

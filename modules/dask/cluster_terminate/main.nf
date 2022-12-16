@@ -1,5 +1,5 @@
 process DASK_CLUSTER_TERMINATE {
-    container { params.container }
+    container { params.dask_container }
     label 'process_low'
 
     input:

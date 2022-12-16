@@ -5,7 +5,7 @@ include {
 } from '../../../lib/dask_process_utils';
 
 process DASK_SCHEDULER {
-    container { params.container }
+    container { params.dask_container }
     containerOptions { get_container_options() }
     cpus { params.scheduler_cores }
     memory "${params.scheduler_cores * params.scheduler_mem_gb_per_core} GB"

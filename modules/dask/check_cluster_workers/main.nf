@@ -4,7 +4,7 @@ include {
 } from '../../../lib/dask_process_utils';
 
 process DASK_CHECK_CLUSTER_WORKERS {
-    container params.container
+    container params.dask_container
     label 'process_low'
 
     input:

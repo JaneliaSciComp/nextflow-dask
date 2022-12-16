@@ -1,5 +1,5 @@
 process DASK_PREPARE {
-    container { params.container }
+    container { params.dask_container }
     label 'process_low'
 
     input:
