@@ -12,6 +12,7 @@ process DASK_CLUSTER_TERMINATE {
     def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
     """
     echo "\$(date): Terminate DASK Scheduler: ${work_dir}"
+    mkdir -p ${work_dir}
     cat > ${terminate_file_name} <<EOF
     DONE
     EOF
