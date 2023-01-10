@@ -20,7 +20,6 @@ ENV PATH=/opt/mambaforge/bin:${PATH}
 
 COPY conda-requirements.yml /tmp/
 
-RUN mamba update --prefix /opt/mambaforge anaconda && \
-    mamba env update -n base -f /tmp/conda-requirements.yml
+RUN mamba env update -n base -f /tmp/conda-requirements.yml
 
 RUN rm -rf /opt/mambaforge/pkgs

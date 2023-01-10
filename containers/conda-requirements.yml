@@ -1,17 +1,23 @@
 channels:
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
+  - python=3.10
+  - pip
+  - bokeh<3
   - cachey=0.2.1
+  - cloudpickle
   - cytoolz=0.12.0
-  - dask=2022.11.1
+  - dask=2022.12.1
+  - distributed=2022.12.1
+  - h5py
   - jq=1.6
   - jupyter-server-proxy
   - lz4=4.0.2
-  - msgpack-python=1.0.4
+  - msgpack-python
   - nomkl=3.0
   - numpy=1.23.5
   - pandas=1.5.1
-  - pip
   - python-blosc=1.10.6
+  - scipy>=1.9.1
   - streamz=0.6.3
