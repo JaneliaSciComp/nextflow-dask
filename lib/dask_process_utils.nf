@@ -74,15 +74,28 @@ def json_text_to_data(text) {
     jsonSlurper.parseText(text)
 }
 
+def normalized_file_name(f) {
+    if (f) {
+        "${file(f)}"
+    } else {
+        ''
+    }
+}
+
 def get_mounted_vols_opts(paths) {
-    def unique_paths = paths.unique(false)
+    def unique_paths = paths
+                        .collect { normalized_file_name(it) }
+                        .findAll { it ? true : false }
+                        .unique(false)
     switch (workflow.containerEngine) {
         case 'docker': 
-            return unique_paths.collect { "-v $it:$it" }
-                               .join(' ')
+            return unique_paths
+                .collect { "-v $it:$it" }
+                .join(' ')
         case 'singularity':
-            return unique_paths.collect { "-B $it" }
-                               .join(' ')
+            return unique_paths
+                .collect { "-B $it" }
+                .join(' ')
         default:
             log.error "Unsupported container engine: ${workflow.containerEngine}"
             ''
