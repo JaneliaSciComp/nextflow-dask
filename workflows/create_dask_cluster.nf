@@ -25,7 +25,7 @@ include {
 workflow CREATE_DASK_CLUSTER {
     take:
     base_work_dir
-    cluster_vol_bindings
+    cluster_accessible_paths
 
     main:
     def cluster_work_dir = DASK_PREPARE(base_work_dir)
@@ -34,7 +34,7 @@ workflow CREATE_DASK_CLUSTER {
     DASK_SCHEDULER(cluster_work_dir)
 
     // start dask workers
-    DASK_WORKER(cluster_work_dir.combine(create_worker_list()), cluster_vol_bindings)
+    DASK_WORKER(cluster_work_dir.combine(create_worker_list()), cluster_accessible_paths)
 
     // get cluster info
     def cluster_info = DASK_CLUSTER_INFO(cluster_work_dir)

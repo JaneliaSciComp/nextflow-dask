@@ -7,7 +7,7 @@ include {
 
 process DASK_WORKER {
     container params.dask_container
-    containerOptions { "${params.runtime_opts} ${get_published_ports_options(worker_id)} ${get_mounted_vols_opts(worker_paths_bindings)}" }
+    containerOptions { "${params.runtime_opts} ${get_published_ports_options(worker_id)} ${get_mounted_vols_opts(worker_accessible_paths)}" }
     cpus { params.worker_cores }
     memory "${params.worker_cores * params.worker_mem_gb_per_core} GB"
     tag "worker-${worker_id}"
@@ -15,8 +15,8 @@ process DASK_WORKER {
 
     input:
     tuple val(work_dir), val(worker_id)
-    val(worker_paths_bindings) // this must be a value channel containing a list of paths 
-                               // that must be made available - it can be an empty list
+    val(worker_accessible_paths) // this must be a value channel containing a list of paths 
+                                 // that must be made available - it can be an empty list
 
     output:
     val(work_dir)
