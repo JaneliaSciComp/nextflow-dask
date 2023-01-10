@@ -13,7 +13,6 @@ def lookup_ip_script() {
 def lookup_local_ip_script() {
     // Take the last IP that's listed by hostname -i.
     // This hack works on Janelia Cluster and AWS EC2.
-    // It won't be necessary at all once we add a local option for Spark apps.
     """
     LOCAL_IP=`hostname -i | rev | cut -d' ' -f1 | rev`
     echo "Use IP: \$LOCAL_IP"
@@ -32,7 +31,7 @@ def lookup_ip_inside_docker_script() {
         [ `cat \$interface/operstate` == "up" ] && \
         LOCAL_IP=\$(ifconfig `basename \$interface` | grep "inet " | awk '\$1=="inet" {print \$2; exit}' | sed s/addr://g)
         if [[ "\$LOCAL_IP" != "" ]]; then
-            echo "Use Spark IP: \$LOCAL_IP"
+            echo "Use IP: \$LOCAL_IP"
             break
         fi
     done
