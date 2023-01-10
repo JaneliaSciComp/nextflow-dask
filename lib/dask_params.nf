@@ -2,11 +2,12 @@ def default_dask_params() {
     [
         dask_container: 'registry.int.janelia.org/janeliascicomp/dask:2022.11.1',
         with_dashboard: true,
-        port: 0,
+        scheduler_port: 0,
         dashboard_port: 0,
         scheduler_cores: 1,
         scheduler_mem_gb_per_core: 1,
         workers: 1,
+        worker_base_port: 0,
         worker_cores: 1,
         worker_threads: 1,
         worker_mem_gb_per_core: 1,

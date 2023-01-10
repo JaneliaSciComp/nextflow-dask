@@ -6,7 +6,7 @@ include {
 
 process DASK_SCHEDULER {
     container { params.dask_container }
-    containerOptions { get_container_options() }
+    containerOptions { get_published_ports_options() }
     cpus { params.scheduler_cores }
     memory "${params.scheduler_cores * params.scheduler_mem_gb_per_core} GB"
 
@@ -17,15 +17,15 @@ process DASK_SCHEDULER {
     val(work_dir)
 
     script:
-    def with_dashboard = params.with_dashboard 
-                            ? "--dashboard"
-                            : ""
-    def dask_port = params.port > 0
-                        ? "--port ${params.port}"
-                        : ""
-    def dashboard_port = params.dashboard_port > 0 
-                            ? "--dashboard-address ${params.dashboard_port}"
-                            : ""
+    def with_dashboard_arg = params.with_dashboard 
+                                ? "--dashboard"
+                                : ""
+    def scheduler_port_arg = params.scheduler_port > 0
+                                ? "--port ${params.scheduler_port}"
+                                : ""
+    def dashboard_port_arg = params.dashboard_port > 0 
+                                ? "--dashboard-address ${params.dashboard_port}"
+                                : ""
     def lookup_ip = lookup_ip_script()
     def scheduler_pid_file ="${work_dir}/scheduler.pid"
     def scheduler_file ="${work_dir}/${dask_scheduler_info()}"
@@ -43,10 +43,10 @@ process DASK_SCHEDULER {
     ${lookup_ip}
 
     dask scheduler \
-        ${with_dashboard} \
-        ${dashboard_port} \
+        ${with_dashboard_arg} \
+        ${dashboard_port_arg} \
         --host \${LOCAL_IP} \
-        ${dask_port} \
+        ${scheduler_port_arg} \
         --pid-file ${scheduler_pid_file} \
         --scheduler-file ${scheduler_file} 2> >(tee ${work_dir}/scheduler.log >&2) \
         &
@@ -61,14 +61,20 @@ process DASK_SCHEDULER {
     """
 }
 
-def get_container_options() {
+def get_published_ports_options() {
     if (workflow.containerEngine == 'docker') {
+        def port_bindings = ''
+        def scheduler_port = params.scheduler_port > 0
+                                ? params.scheduler_port
+                                : 8786
+        port_bindings = "${port_bindings} -p ${scheduler_port}:${scheduler_port}"
         if (params.with_dashboard) {
             def dashboard_port = params.dashboard_port > 0
                                     ? params.dashboard_port
                                     : 8787
-            return "-p ${dashboard_port}:${dashboard_port}"
+            port_bindings = "${port_bindings} -p ${dashboard_port}:${dashboard_port}"
         }
+        return port_bindings
     }
     return ''
 }

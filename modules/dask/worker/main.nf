@@ -1,12 +1,13 @@
 include {
     dask_scheduler_info;
     get_mounted_vols_opts;
+    lookup_ip_script;
     wait_for_file_script;
 } from '../../../lib/dask_process_utils';
 
 process DASK_WORKER {
     container params.dask_container
-    containerOptions { "${params.runtime_opts} ${get_mounted_vols_opts(worker_paths_bindings)}" }
+    containerOptions { "${params.runtime_opts} ${get_published_ports_options(worker_id)} ${get_mounted_vols_opts(worker_paths_bindings)}" }
     cpus { params.worker_cores }
     memory "${params.worker_cores * params.worker_mem_gb_per_core} GB"
     tag "worker-${worker_id}"
@@ -22,6 +23,10 @@ process DASK_WORKER {
 
     script:
     def scheduler_file ="${work_dir}/${dask_scheduler_info()}"
+    def worker_port_arg = params.worker_base_port > 0
+                            ? "--worker-port ${params.worker_base_port+worker_id-1}"
+                            : ""
+    def lookup_ip = lookup_ip_script()
     def worker_name = "worker-${worker_id}"
     def worker_mem = "${params.worker_cores * params.worker_mem_gb_per_core}GB"
     def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
@@ -48,9 +53,14 @@ process DASK_WORKER {
     echo "\$(date): Start DASK Worker ${worker_id} -> ${work_dir}"
     scheduler_ip=\$(jq -r ".address" "${scheduler_file}")
     echo "Found scheduler IP: \${scheduler_ip}"
+
     # Start a worker in background
+    ${lookup_ip}
+
     dask worker \
         --name ${worker_name} \
+        --host \${LOCAL_IP} \
+        ${worker_port_arg} \
         --memory-limit ${worker_mem} \
         --pid-file "${worker_pid_file}" \
         --local-directory ${worker_work_dir} \
@@ -65,4 +75,13 @@ process DASK_WORKER {
     # And wait for the termination marker (forever)
     wait_for_file ${terminate_file_name} -1
     """
+}
+
+def get_published_ports_options(worker_id) {
+    if (workflow.containerEngine == 'docker') {
+        return params.worker_base_port > 0
+                ? "-p ${params.worker_base_port+worker_id-1}:${params.worker_base_port+worker_id-1}"
+                : ''
+    }
+    return ''
 }
