@@ -9,6 +9,7 @@ process DASK_CLUSTER_INFO {
 
     input:
     val(work_dir)
+    val(worker_paths)
 
     output:
     tuple val(work_dir), env(scheduler_info)

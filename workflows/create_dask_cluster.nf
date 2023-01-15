@@ -29,15 +29,16 @@ workflow CREATE_DASK_CLUSTER {
 
     main:
     def cluster_work_dir = DASK_PREPARE(base_work_dir)
+    def cluster_path_binds = cluster_accessible_paths
 
     // start dask scheduler
-    DASK_SCHEDULER(cluster_work_dir, cluster_accessible_paths)
+    DASK_SCHEDULER(cluster_work_dir, cluster_path_binds)
 
     // start dask workers
-    DASK_WORKER(cluster_work_dir.combine(create_worker_list()), cluster_accessible_paths)
+    DASK_WORKER(cluster_work_dir.combine(create_worker_list()), cluster_path_binds)
 
     // get cluster info
-    def cluster_info = DASK_CLUSTER_INFO(cluster_work_dir)
+    def cluster_info = DASK_CLUSTER_INFO(cluster_work_dir, cluster_path_binds)
     | map {
         def (wd, ci) = it
         def ci_json = json_text_to_data(ci)

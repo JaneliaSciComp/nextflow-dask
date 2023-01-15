@@ -12,7 +12,7 @@ process DASK_SCHEDULER {
 
     input:
     val(work_dir) // work_dir must be unique for the cluster
-    val(worker_paths)
+    val(cluster_path_binds)
 
     output:
     val(work_dir)
