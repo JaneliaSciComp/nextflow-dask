@@ -31,7 +31,7 @@ workflow CREATE_DASK_CLUSTER {
     def cluster_work_dir = DASK_PREPARE(base_work_dir)
 
     // start dask scheduler
-    DASK_SCHEDULER(cluster_work_dir)
+    DASK_SCHEDULER(cluster_work_dir, cluster_accessible_paths)
 
     // start dask workers
     DASK_WORKER(cluster_work_dir.combine(create_worker_list()), cluster_accessible_paths)
