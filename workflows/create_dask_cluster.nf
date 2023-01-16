@@ -19,6 +19,7 @@ include {
 } from '../modules/dask/check_cluster_workers/main'
 
 include {
+    as_string
     json_text_to_data;
 } from '../lib/dask_process_utils'
 
@@ -30,17 +31,21 @@ workflow CREATE_DASK_CLUSTER {
     main:
     def cluster_work_dir = DASK_PREPARE(base_work_dir)
     def cluster_path_binds = cluster_accessible_paths
+    | map { as_string(it) }
 
     // start dask scheduler
     log.debug "Create a dask cluster with ${params.workers} workers"
 
     DASK_SCHEDULER(cluster_work_dir, cluster_path_binds)
 
-    def worker_input = cluster_work_dir.combine(create_worker_list(params.workers))
+    def worker_input = cluster_work_dir
+    | combine(create_worker_list(params.workers))
+    | combine(cluster_path_binds)
 
-    worker_input.subscribe { log.debug "Worker input: $it" }
+    worker_input.subscribe { log.info "Worker input: ${it.size()}: $it" }
     // start dask workers
-    DASK_WORKER(worker_input, cluster_path_binds)
+    DASK_WORKER(worker_input.map { it[0..1] },
+                worker_input.map { it[2] })
 
     // get cluster info
     def cluster_info = DASK_CLUSTER_INFO(cluster_work_dir, cluster_path_binds)

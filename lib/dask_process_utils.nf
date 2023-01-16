@@ -83,7 +83,7 @@ def normalized_file_name(f) {
 }
 
 def get_mounted_vols_opts(paths) {
-    def unique_paths = paths
+    def unique_paths = as_list(paths)
                         .collect { normalized_file_name(it) }
                         .findAll { it ? true : false }
                         .unique(false)
@@ -99,5 +99,25 @@ def get_mounted_vols_opts(paths) {
         default:
             log.error "Unsupported container engine: ${workflow.containerEngine}"
             ''
+    }
+}
+
+def as_string(slist) {
+    if (!slist) {
+        ''
+    } else if (slist instanceof List) {
+        slist.join(',')
+    } else {
+        slist as String
+    }
+}
+
+def as_list(vals) {
+    if (!vals) {
+        []
+    } else if (slist instanceof List) {
+        vals
+    } else {
+        vals.split(',')
     }
 }

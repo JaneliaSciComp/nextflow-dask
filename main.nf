@@ -6,7 +6,10 @@ include {
     default_dask_params;
 } from './lib/dask_params';
 
-final_params = default_dask_params() + with_termination_params() + params
+final_params = default_dask_params() +
+               with_termination_params() +
+               cluster_paths_params() +
+               params
 
 include {
     CREATE_DASK_CLUSTER;
@@ -17,7 +20,8 @@ include {
 } from './modules/dask/cluster_terminate/main' addParams(final_params);
 
 workflow {
-    def res = CREATE_DASK_CLUSTER(file(params.work_dir), [])
+    def res = CREATE_DASK_CLUSTER(file(params.work_dir),
+                                  Channel.of(final_params.cluster_paths))
 
     if (final_params.with_termination) {
         res
@@ -32,5 +36,11 @@ workflow {
 def with_termination_params() {
     [
         with_termination: false,
+    ]
+}
+
+def cluster_paths_params() {
+    [
+        cluster_paths: '',
     ]
 }
