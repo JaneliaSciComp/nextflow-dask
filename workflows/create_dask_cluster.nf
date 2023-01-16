@@ -42,7 +42,7 @@ workflow CREATE_DASK_CLUSTER {
     | combine(create_worker_list(params.workers))
     | combine(cluster_path_binds) // cluster paths are needed in ever worker
 
-    worker_input.subscribe { log.info "Worker input: ${it.size()}: $it" }
+    worker_input.subscribe { log.debug "Worker input: $it" }
     // start dask workers
     DASK_WORKER(worker_input.map { it[0..1] },
                 worker_input.map { it[2] })
@@ -60,7 +60,7 @@ workflow CREATE_DASK_CLUSTER {
     }
     | DASK_CHECK_CLUSTER_WORKERS
 
-    cluster_info | subscribe { log.info "Cluster info: $it" }
+    cluster_info | subscribe { log.debug "Cluster info: $it" }
 
     emit:
     done = cluster_info
