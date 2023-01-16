@@ -115,7 +115,7 @@ def as_string(slist) {
 def as_list(vals) {
     if (!vals) {
         []
-    } else if (slist instanceof List) {
+    } else if (vals instanceof List) {
         vals
     } else {
         vals.split(',')
