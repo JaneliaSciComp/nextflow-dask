@@ -32,10 +32,12 @@ workflow CREATE_DASK_CLUSTER {
     def cluster_path_binds = cluster_accessible_paths
 
     // start dask scheduler
+    log.debug "Create a dask cluster with ${params.workers} workers"
+
     DASK_SCHEDULER(cluster_work_dir, cluster_path_binds)
 
     // start dask workers
-    DASK_WORKER(cluster_work_dir.combine(create_worker_list()), cluster_path_binds)
+    DASK_WORKER(cluster_work_dir.combine(create_worker_list(params.workers)), cluster_path_binds)
 
     // get cluster info
     def cluster_info = DASK_CLUSTER_INFO(cluster_work_dir, cluster_path_binds)
@@ -56,7 +58,6 @@ workflow CREATE_DASK_CLUSTER {
     done = cluster_info
 }
 
-def create_worker_list() {
-    def nworkers = params.workers
+def create_worker_list(nworkers) {
     return 1..nworkers
 }
