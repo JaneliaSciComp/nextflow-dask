@@ -40,7 +40,7 @@ workflow CREATE_DASK_CLUSTER {
 
     def worker_input = cluster_work_dir
     | combine(create_worker_list(params.workers))
-    | combine(cluster_path_binds)
+    | combine(cluster_path_binds) // cluster paths are needed in ever worker
 
     worker_input.subscribe { log.info "Worker input: ${it.size()}: $it" }
     // start dask workers
