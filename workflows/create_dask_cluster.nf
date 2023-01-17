@@ -1,6 +1,6 @@
 include {
     DASK_PREPARE;
-} from '../modules/dask/prepare/main'
+} from '../modules/local/dask_prepare.nf'
 
 include {
     DASK_SCHEDULER;
