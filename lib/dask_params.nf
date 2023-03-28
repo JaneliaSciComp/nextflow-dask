@@ -1,6 +1,6 @@
 def default_dask_params() {
     [
-        dask_container: 'registry.int.janelia.org/janeliascicomp/dask:2022.11.1',
+        dask_container: 'registry.int.janelia.org/janeliascicomp/dask:2023.3.2',
         with_dashboard: true,
         scheduler_port: 0,
         dashboard_port: 0,
