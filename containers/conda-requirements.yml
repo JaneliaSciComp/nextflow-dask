@@ -2,18 +2,17 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.10
+  - python=3.11
   - pip
-  - bokeh<3
+  - bokeh>=2.4.2,<3
   - cachey=0.2.1
-  - cloudpickle
   - cytoolz=0.12.0
-  - dask=2022.12.1
-  - distributed=2022.12.1
+  - dask=2023.3.2
+  - distributed=2023.3.2
   - h5py
   - jq=1.6
   - jupyter-server-proxy
-  - lz4=4.0.2
+  - lz4>=4.3.2
   - msgpack-python
   - nomkl=3.0
   - numpy=1.23.5
