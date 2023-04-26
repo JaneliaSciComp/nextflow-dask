@@ -14,14 +14,14 @@ process DASK_CHECK_CLUSTER_WORKERS {
     tuple val(cluster_id), val(scheduler_address), val(work_dir), env(connected_workers)
 
     script:
-    def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
-    def n_required_workers = params.required_workers > 0
-                                ? params.required_workers
-                                : params.workers
+    def terminate_file_name = "${work_dir}/${params.terminate_dask_cluster_marker}"
+    def n_required_workers = params.required_dask_workers > 0
+                                ? params.required_dask_workers
+                                : params.dask_workers
     """
     required_workers=${n_required_workers}
     if (( \${required_workers} > 0 )); then
-        total_workers=\$((${params.workers}))
+        total_workers=\$((${params.dask_workers}))
         seconds=0
         wait_timeout=\$((${params.dask_cluster_start_timeout}))
         polling_interval=\$((${params.file_check_interval_in_seconds}))

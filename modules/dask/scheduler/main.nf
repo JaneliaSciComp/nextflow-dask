@@ -7,8 +7,8 @@ include {
 process DASK_SCHEDULER {
     container { params.dask_container }
     containerOptions { get_published_ports_options() }
-    cpus { params.scheduler_cores }
-    memory "${params.scheduler_cores * params.scheduler_mem_gb_per_core} GB"
+    cpus { params.dask_scheduler_cores }
+    memory "${params.dask_scheduler_cores * params.dask_scheduler_mem_gb_per_core} GB"
 
     input:
     val(work_dir) // work_dir must be unique for the cluster
@@ -18,11 +18,11 @@ process DASK_SCHEDULER {
     val(work_dir)
 
     script:
-    def with_dashboard_arg = params.with_dashboard 
+    def with_dashboard_arg = params.with_dask_dashboard 
                                 ? "--dashboard"
                                 : ""
-    def scheduler_port_arg = params.scheduler_port > 0
-                                ? "--port ${params.scheduler_port}"
+    def scheduler_port_arg = params.dask_scheduler_port > 0
+                                ? "--port ${params.dask_scheduler_port}"
                                 : ""
     def dashboard_port_arg = params.dashboard_port > 0 
                                 ? "--dashboard-address ${params.dashboard_port}"
@@ -30,7 +30,7 @@ process DASK_SCHEDULER {
     def lookup_ip = lookup_ip_script()
     def scheduler_pid_file ="${work_dir}/scheduler.pid"
     def scheduler_file ="${work_dir}/${dask_scheduler_info()}"
-    def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
+    def terminate_file_name = "${work_dir}/${params.terminate_dask_cluster_marker}"
     """
     if [[ -e ${terminate_file_name} ]] ; then
         echo "Do not start scheduler because cluster has been terminated already"
@@ -65,11 +65,11 @@ process DASK_SCHEDULER {
 def get_published_ports_options() {
     if (workflow.containerEngine == 'docker') {
         def port_bindings = ''
-        def scheduler_port = params.scheduler_port > 0
-                                ? params.scheduler_port
+        def scheduler_port = params.dask_scheduler_port > 0
+                                ? params.dask_scheduler_port
                                 : 8786
         port_bindings = "${port_bindings} -p ${scheduler_port}:${scheduler_port}"
-        if (params.with_dashboard) {
+        if (params.with_dask_dashboard) {
             def dashboard_port = params.dashboard_port > 0
                                     ? params.dashboard_port
                                     : 8787

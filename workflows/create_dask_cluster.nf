@@ -34,12 +34,12 @@ workflow CREATE_DASK_CLUSTER {
     | map { as_string(it) }
 
     // start dask scheduler
-    log.debug "Create a dask cluster with ${params.workers} workers"
+    log.debug "Create a dask cluster with ${params.dask_workers} workers"
 
     DASK_SCHEDULER(cluster_work_dir, cluster_path_binds)
 
     def worker_input = cluster_work_dir
-    | combine(create_worker_list(params.workers))
+    | combine(create_worker_list(params.dask_workers))
     | combine(cluster_path_binds) // cluster paths are needed in ever worker
 
     worker_input.subscribe { log.debug "Worker input: $it" }

@@ -9,7 +9,7 @@ process DASK_CLUSTER_TERMINATE {
     val(work_dir)
 
     script:
-    def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
+    def terminate_file_name = "${work_dir}/${params.terminate_dask_cluster_marker}"
     """
     echo "\$(date): Terminate DASK Scheduler: ${work_dir}"
     # ensure the work dir exists

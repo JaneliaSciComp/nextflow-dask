@@ -8,8 +8,8 @@ include {
 process DASK_WORKER {
     container params.dask_container
     containerOptions { "${params.runtime_opts} ${get_published_ports_options(worker_id)} ${get_mounted_vols_opts(cluster_paths)}" }
-    cpus { params.worker_cores }
-    memory "${params.worker_cores * params.worker_mem_gb_per_core} GB"
+    cpus { params.dask_worker_cores }
+    memory "${params.dask_worker_cores * params.dask_worker_mem_gb_per_core} GB"
     tag "worker-${worker_id}"
     label 'workerClusterOptions'
 
@@ -28,12 +28,12 @@ process DASK_WORKER {
                             : ""
     def lookup_ip = lookup_ip_script()
     def worker_name = "worker-${worker_id}"
-    def worker_mem = "${params.worker_cores * params.worker_mem_gb_per_core}GB"
-    def terminate_file_name = "${work_dir}/${params.terminate_cluster_marker}"
+    def worker_mem = "${params.dask_worker_cores * params.dask_worker_mem_gb_per_core}GB"
+    def terminate_file_name = "${work_dir}/${params.terminate_dask_cluster_marker}"
     def worker_work_dir = "${work_dir}/${worker_name}"
     def worker_pid_file = "${worker_work_dir}/${worker_name}.pid"
-    def threads_per_worker_arg = params.worker_threads > 0 
-                                    ? "--nthreads ${params.worker_threads}"
+    def threads_per_worker_arg = params.dask_worker_threads > 0 
+                                    ? "--nthreads ${params.dask_worker_threads}"
                                     : ""
 
     """
