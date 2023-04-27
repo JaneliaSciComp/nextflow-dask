@@ -23,8 +23,8 @@ process DASK_WORKER {
 
     script:
     def scheduler_file ="${work_dir}/${dask_scheduler_info()}"
-    def worker_port_arg = params.worker_base_port > 0
-                            ? "--worker-port ${params.worker_base_port+worker_id-1}"
+    def worker_port_arg = params.dask_worker_base_port > 0
+                            ? "--worker-port ${params.dask_worker_base_port+worker_id-1}"
                             : ""
     def lookup_ip = lookup_ip_script()
     def worker_name = "worker-${worker_id}"
@@ -79,8 +79,8 @@ process DASK_WORKER {
 
 def get_published_ports_options(worker_id) {
     if (workflow.containerEngine == 'docker') {
-        return params.worker_base_port > 0
-                ? "-p ${params.worker_base_port+worker_id-1}:${params.worker_base_port+worker_id-1}"
+        return params.dask_worker_base_port > 0
+                ? "-p ${params.dask_worker_base_port+worker_id-1}:${params.dask_worker_base_port+worker_id-1}"
                 : ''
     }
     return ''

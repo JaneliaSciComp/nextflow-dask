@@ -24,8 +24,8 @@ process DASK_SCHEDULER {
     def scheduler_port_arg = params.dask_scheduler_port > 0
                                 ? "--port ${params.dask_scheduler_port}"
                                 : ""
-    def dashboard_port_arg = params.dashboard_port > 0 
-                                ? "--dashboard-address ${params.dashboard_port}"
+    def dashboard_port_arg = params.dask_dashboard_port > 0 
+                                ? "--dashboard-address ${params.dask_dashboard_port}"
                                 : ""
     def lookup_ip = lookup_ip_script()
     def scheduler_pid_file ="${work_dir}/scheduler.pid"
@@ -70,8 +70,8 @@ def get_published_ports_options() {
                                 : 8786
         port_bindings = "${port_bindings} -p ${scheduler_port}:${scheduler_port}"
         if (params.with_dask_dashboard) {
-            def dashboard_port = params.dashboard_port > 0
-                                    ? params.dashboard_port
+            def dashboard_port = params.dask_dashboard_port > 0
+                                    ? params.dask_dashboard_port
                                     : 8787
             port_bindings = "${port_bindings} -p ${dashboard_port}:${dashboard_port}"
         }
