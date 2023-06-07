@@ -30,7 +30,7 @@ workflow CREATE_DASK_CLUSTER {
 
     main:
     def cluster_work_dir = DASK_PREPARE(base_work_dir)
-    def cluster_path_binds = cluster_accessible_paths.ifEmpty('')
+    def cluster_path_binds = cluster_accessible_paths.filter(it).ifEmpty('')
     | map { as_string(it) }
 
     // start dask scheduler
