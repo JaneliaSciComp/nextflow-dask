@@ -52,11 +52,13 @@ workflow CREATE_DASK_CLUSTER {
     | map {
         def (wd, ci) = it
         def ci_json = json_text_to_data(ci)
-        [
+        def r = [
             ci_json.id, // cluster id
             ci_json.address, // scheduler address
             wd // cluster work dir
         ]
+        log.debug "Parsed cluster info $ci -> $r"
+        r
     }
     | DASK_CHECK_CLUSTER_WORKERS
 
