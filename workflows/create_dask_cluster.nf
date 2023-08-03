@@ -51,6 +51,7 @@ workflow CREATE_DASK_CLUSTER {
     def cluster_info = DASK_CLUSTER_INFO(cluster_work_dir, cluster_path_binds)
     | map {
         def (wd, ci) = it
+        log.debug "Get cluster info from $wd $ci"
         def ci_json = json_text_to_data(ci)
         def r = [
             ci_json.id, // cluster id
